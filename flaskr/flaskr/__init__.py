@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from . import db
+from . import db, auth
 
 # Flask will automatically detect the factory (create_app or make_app)
 def create_app(test_config=None):
@@ -13,7 +13,7 @@ def create_app(test_config=None):
     # __name__ is the current module name. The Flask class needs to know where it's located
     # to setup some paths.
 
-    # instance_relative_config=True tells the app that configuration files are relative 
+    # instance_relative_config=True tells the app that configuration files are relative
     # to the instance folder. The instance folder is outside of the flaskr package and
     # can hold local data that shouldn't be commited to version control, such as secret
     # keys and the database.
@@ -52,6 +52,8 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
+
+    app.register_blueprint(auth.bp)
 
     db.init_app(app)
 
