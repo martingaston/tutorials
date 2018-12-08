@@ -1,6 +1,7 @@
 import functools
 
-from flask import (Blueprint, flash, g, redirect, render_template, request, session, url_for)
+from flask import (Blueprint, flash, g, redirect,
+                   render_template, request, session, url_for)
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
@@ -13,6 +14,8 @@ from flaskr.db import get_db
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 # when Flask recieves a request to /auth/register it will call the register view
+
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     # validate the input if request.method is POST (user submits form)
@@ -31,15 +34,15 @@ def register():
         # fetchone() returns one row from the query or None is no results
         elif db.execute(
                 'SELECT id FROM user WHERE username = ?', (username,)
-                ).fetchone() is not None:
+        ).fetchone() is not None:
             error = 'User {} is already registered.'.format(username)
 
         # if validation suceeds, the new user is inserted into the database
         if error is None:
             db.execute(
-                    'INSERT INTO user (username, password) VALUES (?, ?)',
-                    (username, generate_password_hash(password))
-                    )
+                'INSERT INTO user (username, password) VALUES (?, ?)',
+                (username, generate_password_hash(password))
+            )
             # as this query modifies data, db.commit() needs to be called to save changes
             db.commit()
             return redirect(url_for('auth.login'))
@@ -50,17 +53,19 @@ def register():
     # if GET request or error in validation, render the register page
     return render_template('auth/register.html')
 
+
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         db = get_db()
+        print(db)
         error = None
         # query user and store it in a variable for later use
         user = db.execute(
-                'SELECT * FROM user WHERE username = ?', (username,)
-                ).fetchone()
+            'SELECT * FROM user WHERE username = ?', (username,)
+        ).fetchone()
 
         if user is None:
             error = 'Incorrect username.'
@@ -79,6 +84,7 @@ def login():
 
     return render_template('auth/login.html')
 
+
 @bp.before_app_request
 def load_logged_in_user():
     """Load a user if their information is available at the start of each request"""
@@ -88,14 +94,16 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = get_db().execute(
-                'SELECT * FROM user WHERE id = ?', (user_id,)
-                ).fetchone()
+            'SELECT * FROM user WHERE id = ?', (user_id,)
+        ).fetchone()
+
 
 @bp.route('/logout')
 def logout():
     """Log out current user and remove session"""
     session.clear()
     return redirect(url_for('index'))
+
 
 def login_required(view):
     """Add a decorator to check for authenticated views, returning view function that wraps original view"""

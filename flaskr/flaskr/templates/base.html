@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+  <!-- the standard context details default global variables -->
+  <!-- http://flask.pocoo.org/docs/1.0/templating/#standard-context -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>{% block title %}{% endblock %} - Flaskr</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css')}}"
+    />
   </head>
   <body>
     <nav>
@@ -26,8 +31,7 @@
       <header>{% block header %}{% endblock %}</header>
       {% for message in get_flashed_messages() %}
       <div class="flash">{{ message }}</div>
-      {% endfor %}
-      {% block content %}{% endblock %}
+      {% endfor %} {% block content %}{% endblock %}
     </section>
   </body>
 </html>
