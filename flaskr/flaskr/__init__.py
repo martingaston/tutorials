@@ -1,8 +1,10 @@
 import os
 from flask import Flask
-from . import db
+from . import db, auth, blog
 
 # Flask will automatically detect the factory (create_app or make_app)
+
+
 def create_app(test_config=None):
     """Create and configure the application factory"""
 
@@ -13,7 +15,7 @@ def create_app(test_config=None):
     # __name__ is the current module name. The Flask class needs to know where it's located
     # to setup some paths.
 
-    # instance_relative_config=True tells the app that configuration files are relative 
+    # instance_relative_config=True tells the app that configuration files are relative
     # to the instance folder. The instance folder is outside of the flaskr package and
     # can hold local data that shouldn't be commited to version control, such as secret
     # keys and the database.
@@ -24,9 +26,9 @@ def create_app(test_config=None):
     # note how the database is kept in the app.instance_path (see above)
 
     app.config.from_mapping(
-            SECRET_KEY='dev',
-            DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-            )
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+    )
 
     # app.config.from_pyfile() overrides the default configuration with values from
     # the config.py file from the instance folder, if it exists. This can be used, for
@@ -52,6 +54,13 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
+
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(blog.bp)
+    # app.add_url_rule() associates the endpoint 'index' with the / url
+    # the application factory will see our blog.index view as different without the association
+    # however, if our application factory defined its own 'index' route it would never find 'blog.index'
+    app.add_url_rule('/', endpoint='index')
 
     db.init_app(app)
 
