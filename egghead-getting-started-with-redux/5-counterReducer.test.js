@@ -1,4 +1,4 @@
-const counter = require("./counterReducer");
+const counter = require("./5-counterReducer");
 
 test("returns correct increment/decrement", () => {
   expect(counter(0, { type: "INCREMENT" })).toBe(1);
