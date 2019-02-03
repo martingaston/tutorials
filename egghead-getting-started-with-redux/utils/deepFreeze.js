@@ -1,5 +1,5 @@
 // https://github.com/substack/deep-freeze
-module.exports = o => {
+module.exports = function deepFreeze(o) {
   Object.freeze(o);
 
   Object.getOwnPropertyNames(o).forEach(function(prop) {
