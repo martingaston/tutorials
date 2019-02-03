@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Redux: React Counter Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.7.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.7.0/umd/react-dom.production.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const { createStore } = Redux;
+      const e = React.createElement;
+
+      // create a reducer function
+      const counter = (state = 0, action) => {
+        switch (action.type) {
+          case "INCREMENT":
+            return state + 1;
+          case "DECREMENT":
+            return state - 1;
+          default:
+            return state;
+        }
+      };
+
+      // create a Redux store with the counter reducer function
+      const store = createStore(counter);
+
+      // setup our dispatch functions
+      const onIncrement = () => store.dispatch({ type: "INCREMENT" });
+      const onDecrement = () => store.dispatch({ type: "DECREMENT" });
+
+      const Counter = ({ value, onIncrement, onDecrement }) =>
+        e(
+          "div",
+          null,
+          e("h1", null, value),
+          e("button", { onClick: onIncrement }, "+"),
+          e("button", { onClick: onDecrement }, "-")
+        );
+
+      const render = () => {
+        ReactDOM.render(
+          e(Counter, {
+            value: store.getState(),
+            onIncrement: onIncrement,
+            onDecrement: onDecrement
+          }),
+          document.getElementById("root")
+        );
+      };
+
+      // subscribe to the store so render updates when state changes
+      store.subscribe(render);
+      render();
+    </script>
+  </body>
+</html>
