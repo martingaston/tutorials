@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Redux: Store Methods: getState(), dispatch() and subscribe()</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.min.js"></script>
+  </head>
+  <body>
+    <script>
+      const { createStore } = Redux;
+
+      const counter = (state = 0, action) => {
+        switch (action.type) {
+          case "INCREMENT":
+            return state + 1;
+          case "DECREMENT":
+            return state - 1;
+          default:
+            return state;
+        }
+      };
+
+      const render = () => {
+        document.body.innerText = store.getState();
+      };
+
+      const store = createStore(counter);
+
+      store.subscribe(render);
+      render();
+
+      document.addEventListener("click", () => {
+        store.dispatch({ type: "INCREMENT" });
+      });
+    </script>
+  </body>
+</html>
