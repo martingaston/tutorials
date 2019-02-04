@@ -1,5 +1,3 @@
-const { createStore } = require("redux");
-
 const combineReducers = reducers => {
   return (state = {}, action) => {
     return Object.keys(reducers).reduce((nextState, key) => {
@@ -51,11 +49,4 @@ const todos = (state = [], action) => {
   }
 };
 
-const todoApp = combineReducers({
-  todos,
-  visibilityFilter
-});
-
-const store = createStore(todoApp);
-console.log("Initial State:");
-console.log(store.getState());
+module.exports = { combineReducers, visibilityFilter, todos };
