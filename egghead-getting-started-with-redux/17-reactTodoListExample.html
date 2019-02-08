@@ -68,28 +68,57 @@
       const store = createStore(todoApp);
       let nextTodoId = 0;
       class TodoApp extends Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            todoInput: ""
+          };
+          this.handleChange = this.handleChange.bind(this);
+          this.handleKeyPress = this.handleKeyPress.bind(this);
+          this.handleSubmit = this.handleSubmit.bind(this);
+        }
+
+        handleSubmit = e => {
+          store.dispatch({
+            type: "ADD_TODO",
+            text: this.state.todoInput,
+            id: nextTodoId++
+          });
+          this.setState({ todoInput: "" });
+        };
+
+        handleChange = e => {
+          this.setState({ todoInput: e.target.value });
+        };
+
+        handleKeyPress = e => {
+          if (e.key === "Enter") {
+            this.handleSubmit();
+          }
+        };
+
         render() {
           return (
             <div>
-              <button
-                onClick={() =>
-                  store.dispatch({
-                    type: "ADD_TODO",
-                    text: "Test",
-                    id: nextTodoId++
-                  })
-                }
-              >
-                Add Todo
-              </button>
+              <input
+                value={this.state.todoInput}
+                onChange={this.handleChange}
+                onKeyPress={this.handleKeyPress}
+              />
+              <button onClick={this.handleSubmit}>Add Todo</button>
               <ul>
                 {this.props.todos.map((t, i) => (
-                  <li className={t.completed ? 'todo-completed' : ''} onClick={() =>
-                    store.dispatch({
-                      type: "TOGGLE_TODO",
-                      id: i
-                    })
-                  }>{t.text}</li>
+                  <li
+                    className={t.completed ? "todo-completed" : ""}
+                    onClick={() =>
+                      store.dispatch({
+                        type: "TOGGLE_TODO",
+                        id: i
+                      })
+                    }
+                  >
+                    {t.text}
+                  </li>
                 ))}
               </ul>
             </div>
